@@ -1,8 +1,16 @@
 # LBRY-Tech-CHN
 
+## 概述
+
 本项目为大家协同LBRY相关技术文档翻译而建，主要文档地址：https://lbry.tech
 
-## 概述
+## 翻译认领
+
+1. https://lbry.tech/spec  部分
+2. https://lbry.tech/overview  全部
+3. https://lbry.tech/api/blockchain 待定
+4. https://lbry.tech/api/sdk 待定
+5. https://lbry.tech/glossary 
 
 ## 约定
 
