@@ -37,6 +37,7 @@ URL | A memorable reference to a claim.
 ## 鸣谢贡献
 
 ## 参与讨论
+欢迎加入Discord [LBRY中文社区](https://discord.gg/YxT8Yz7e) 
 
 
 
