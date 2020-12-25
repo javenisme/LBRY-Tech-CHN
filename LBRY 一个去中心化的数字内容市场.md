@@ -34,15 +34,15 @@ LBRY自2016年6月开始公开使用。截至2020年5月，已经有超过330万
 
 术语 | 释义
 --------- | -------------
-blob |  The unit of data transmission on the data network. A published file is split into many blobs.
-stream |  A set of blobs that can be reassembled into a file. Every stream has one or more content blobs which contain the published file, and a manifest blob which contains a list of the content blob hashes.(一组blob可以重新组合成一个文件。每个流都有一个或多个包含发布文件的内容blob和一个包含内容blob哈希值列表的manifest blob)
-blob hash |  The cryptographic hash of a blob. Hashes are used to uniquely identify blobs and to verify that the contents of the blob are correct. Unless otherwise specified, LBRY uses SHA-384 as the hash function.
-metadata |  Information about the contents of a stream (e.g. creator, description, stream hash, etc). Metadata is stored in the blockchain.
-name | A human-readable UTF8 string that is associated with a claim.
-stake | An entry in the blockchain that sets aside some credits and associates them with a name.（区块链中的一个条目，预留了一些信用，并将其与名称关联起来。）
-claim | A stake that contains metadata about a stream or channel.（包含了关于流或频道的元数据所有权申明）
-support | A stake that lends its credits to bolster a claim.
-channel | The unit of pseudonymous publisher identity. Claims may be part of a channel.(匿名发布者身份的标识。Claims可以是频道的一部分。)
+blob |  数据网络上的数据传输单位。一个已发布的文件会被分割成许多blob
+stream |  一组blob可以重新组合成一个文件。每个流都有一个或多个包含发布文件的内容blob和一个包含内容blob哈希值列表的manifest blob
+blob hash |  一个blob的加密哈希值。哈希值用于唯一识别blob，并验证blob的内容是否正确。除非另有规定，LBRY使用SHA-384作为哈希函数
+metadata |  流的内容信息（如创建者、描述、流哈希等），元数据存储在区块链中
+name | 与Claim相关联的人可读的UTF8字符串
+stake | 区块链中的一个条目，预留了一些信用，并将其与名称关联起来
+claim | 包含了关于流或频道的元数据Stake
+support | 借贷Credits（译者注：通证或代币）来奖励Claim的Stake
+channel | 匿名发布者身份的标识。Claims可以是频道的一部分
 URL | A memorable reference to a claim.
 
 ## Blockchain
@@ -203,7 +203,7 @@ Claimtrie是以Merkle树的形式来实现的，它将名称映射到Claim上。
 在进行任何比较时，Claim中的名称都被归一化。这是必要的，为避免由于Unicode等价或大小写引起的混淆，这是必要的。当比较名称时，首先使用Unicode规范化表格D（NFD）进行转换，然后使用en_US本地化进行小写。这意味着名称实际上是不区分大小写的。由于竞争同一名称的权利要求存储在claimtrie中的同一节点中，因此名称也要进行归一化，以确定claimtrie到该节点的路径。
 
 #### Expiration
-在协议的早期版本中，Stake在被接受后会有262974个区块过期（即自动成为放弃）。部署了一个硬分叉，有效地禁用了过期。任何在分叉生效前过期的stake都会被当作被放弃的stake处理。详情请看[此拉请求][!https://github.com/lbryio/lbrycrd/pull/137]。
+在协议的早期版本中，Stake在被接受后会有262974个区块过期（即自动成为放弃）。部署了一个硬分叉，有效地禁用了过期。任何在分叉生效前过期的stake都会被当作被放弃的stake处理。详情请看[请求](https://github.com/lbryio/lbrycrd/pull/137)
 
 ### URLs
 ####	Components
