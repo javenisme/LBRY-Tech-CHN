@@ -13,6 +13,9 @@
 5. https://lbry.tech/glossary 
 6. https://lbry.tech/resources/android-build 
 7. https://lbry.tech/resources/wallet-server 
+8. https://lbry.tech/resources/daemon-settings
+9. https://lbry.tech/contribute?_ga=2.217142302.969493332.1608786133-301747654.1608555029
+
 
 ## 约定
 
