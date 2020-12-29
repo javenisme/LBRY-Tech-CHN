@@ -1,4 +1,4 @@
-#LBRY 一个去中心化的数字内容市场
+#LBRY 一个去中心化的数字内容交易市场
 
 原文：LBRY: A Decentralized Digital Content Marketplace
 地址：https://lbry.tech/spec
@@ -43,7 +43,7 @@ stake | 区块链中的一个条目，预留了一些信用，并将其与名称
 claim | 包含了关于流或频道的元数据Stake
 support | 借贷Credits（译者注：通证或代币）来奖励Claim的Stake
 channel | 匿名发布者身份的标识。Claims可以是频道的一部分
-URL | A memorable reference to a claim.
+URL | A memorable reference to a claim
 
 ## Blockchain
 LBRY区块链是一个公开的工作证明区块链。其设计基于比特币，但做了大量修改。本文档不涉及或具体述说LBRY与比特币相同的任何方面，而是专注于不同之处，主要是Claim操作和claimtrie。
@@ -206,15 +206,90 @@ Claimtrie是以Merkle树的形式来实现的，它将名称映射到Claim上。
 在协议的早期版本中，Stake在被接受后会有262974个区块过期（即自动成为放弃）。部署了一个硬分叉，有效地禁用了过期。任何在分叉生效前过期的stake都会被当作被放弃的stake处理。详情请看[请求](https://github.com/lbryio/lbrycrd/pull/137)
 
 ### URLs
+
+URLs是对Claims的显性引用，所有的URLs：
+1. 包含一个name（参见 Claim属性）
+2. 是向一个独立的，具体的Claim的解析
+
+很多Claim和区块链设计的最终目的是提供可记忆的URL，可以在没有区块链完整副本的情况下被客户证明解决（如简化支付验证钱包）。
 ####	Components
-	a.	
-	b.	
-	c.	
-	d.	
-	e.	
-	f.	
-	g.	
+URL是一个带有一个或多个修饰词的名称。单独的裸名会以最新的块高解析到Controlling Claim。下面是一些常见的URL结构。
+
+##### Stream Claim Name
+A controlling stream claim.
+
+`lbry://meet-lbry	`
+##### Channel Claim Name
+频道的claim
+
+`lbry://@lbry` 
+##### Channel Claim Name and Stream Claim Name 
+一个URL同时包含一个频道和一个流Claim名称。包含两者的 URL 分两步解析。首先，频道被解析为其相关的Claim。然后，解析流Claim名称，从频道中的Claim中获得适当的Claim。
+
+`lbry://@lbry/meet-lbry`
+##### Claim ID
+该名称与该Claim ID的Claim。允许部分前缀匹配（见URL解析）。
+`lbry://meet-lbry:7a0aa95c5023c21c098`
+`lbry://meet-lbry:7a`
+`lbry://@lbry:3f/meet-lbry`
+
+注意：在本规范的前一个版本中，#字符用于表示url的Claim ID部分。这个字符现在已经被废弃了，以后将不再支持。
+
+##### Sequence
+该名称的第n个被接受的Claim。_n必须是一个正数。这可以用来按Claim提出的顺序而不是按支持Claim的信用额度来参考。
+
+`lbry://meet-lbry*1`
+`lbry://@lbry*1/meet-lbry`
+##### Amount Order 
+该名称的第n件Claim，按总额排序(最高的先)。_n必须是一个正数。这对于解决可能成为控制权的非控制权Claim是有用的。
+
+`lbry://meet-lbry$2`
+`lbry://meet-lbry$3`
+`lbry://@lbry$2/meet-lbry`
+
+##### Query Params
+这些参数在LBRY协议中没有意义。它们是供上游应用程序使用的。
+
+`lbry://meet-lbry?arg=value+arg2=value2`
+
 ####	Grammar
+完整的URL语法是使用[Xquery EBNF](https://www.w3.org/TR/2017/REC-xquery-31-20170321/#EBNFNotation)符号定义的。
+
+```
+URL ::= Scheme Path Query?
+
+Scheme ::= 'lbry://'
+
+Path ::=  StreamClaimNameAndModifier | ChannelClaimNameAndModifier ( '/' StreamClaimNameAndModifier )?
+
+StreamClaimNameAndModifier ::= StreamClaimName Modifier?
+ChannelClaimNameAndModifier ::= ChannelClaimName Modifier?
+
+StreamClaimName ::= NameChar+
+ChannelClaimName ::= '@' NameChar+
+
+Modifier ::= ClaimID | Sequence | AmountOrder
+ClaimID ::= ':' Hex+
+Sequence ::= '*' PositiveNumber
+AmountOrder ::= '$' PositiveNumber
+
+Query ::= '?' QueryParameterList
+QueryParameterList ::= QueryParameter ( '&' QueryParameterList )*
+QueryParameter ::= QueryParameterName ( '=' QueryParameterValue )?
+QueryParameterName ::= NameChar+
+QueryParameterValue ::= NameChar+
+
+PositiveDigit ::= [123456789]
+Digit ::= '0' | PositiveDigit
+PositiveNumber ::= PositiveDigit Digit*
+
+HexAlpha ::= [abcdef]
+Hex ::= (Digit | HexAlpha)+
+
+NameChar ::= Char - [=&#:*$@%?/]  /* any character that is not reserved */
+Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF] /* any Unicode character, excluding the surrogate blocks, FFFE, and FFFF. */
+```
+
 ####	Resolution
 	a.	
 	b.	
